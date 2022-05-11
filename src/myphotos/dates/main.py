@@ -14,7 +14,8 @@
 
 import tkinter as tk
 
-import myphotos.dates.filename_to_photo
+import myphotos
+from myphotos.dates import filename_to_photo
 
 # -----------------------------------------------
 
@@ -102,8 +103,8 @@ class _DateInterface(myphotos.MyPhotosWindow):
         self.draw_selector_window(False)
         self.draw_progress_window(True)
         # ---
-        go = myphotos.dates.filename_to_photo if _OMU_OPTIONS == _OPTIONS[0] else myphotos.dates.filename_to_photo
-        for p in go.main(data[_TXT_SOURCE], data[_TXT_TARGET]):
+        func = filename_to_photo if _OMU_OPTIONS == _OPTIONS[0] else filename_to_photo
+        for p in func.main(data[_TXT_SOURCE], data[_TXT_TARGET]):
             self.elements[_TXB_PROGRESS].insert(tk.END, '\n'.join(p))
             self.elements[_TXB_PROGRESS].see(tk.END)
         self.elements[_TXB_PROGRESS].insert(tk.END, '\n\nCompleted.')

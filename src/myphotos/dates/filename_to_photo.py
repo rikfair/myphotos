@@ -31,10 +31,10 @@ def main(source, target):
 
     # -------------------------------------------
 
-    def progress_append(s):
+    def progress_append(text):
         """ Prints and adds the progress string to the progress list """
-        print(s)
-        progress.append(s)
+        print(text)
+        progress.append(text)
 
     # -------------------------------------------
 
@@ -50,18 +50,18 @@ def main(source, target):
         if (i.upper().endswith('.JPG')) or (i.upper().endswith('.JPEG')):
             img = Image.open(source_file)
             try:
-                exif_dict = piexif.load(img.info['exif'])
+                exif = piexif.load(img.info['exif'])
             except KeyError:
                 progress_append('.. No exif found')
-                exif_dict = {"0th": {}, "Exif": {}, "GPS": {}, "1st": {}}
+                exif = {"0th": {}, "Exif": {}, "GPS": {}, "1st": {}}
             try:
-                progress_append('.. Old date: ' + str(exif_dict['Exif'][piexif.ExifIFD.DateTimeOriginal]))
+                progress_append(f".. Old date: {exif['Exif'][piexif.ExifIFD.DateTimeOriginal]}")
             except KeyError:
                 progress_append('.. Old date not found')
             new_date = i[0:19].replace('-', ':').replace('T', ' ')
             progress_append(f'.. New date: {new_date}')
-            exif_dict['Exif'][piexif.ExifIFD.DateTimeOriginal] = new_date
-            exif_bytes = piexif.dump(exif_dict)
+            exif['Exif'][piexif.ExifIFD.DateTimeOriginal] = new_date
+            exif_bytes = piexif.dump(exif)
             if not os.path.isdir(os.path.dirname(target_file)):
                 os.makedirs(os.path.dirname(target_file))
             img.save(target_file, exif=exif_bytes)
