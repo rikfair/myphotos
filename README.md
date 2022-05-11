@@ -1,2 +1,2 @@
 # myphotos
-Utilities to manager my photos
+Utilities to manage my photos
