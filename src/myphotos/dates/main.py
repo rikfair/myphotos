@@ -49,7 +49,7 @@ class _DateInterface(myphotos.MyPhotosWindow):
     # -------------------------------------------
 
     def draw_progress_window(self, show):
-        """ Packs the selector window objects """
+        """ Packs the progress window objects """
 
         if show:
             self.elements[_FRM_PROGRESS].pack(anchor=tk.N, side=tk.LEFT, fill=tk.BOTH, expand=True)
