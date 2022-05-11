@@ -19,6 +19,8 @@ from tkinter import filedialog
 
 # -----------------------------------------------
 
+ERRORS = '_errors_'
+NON_PHOTOS = '_non-photos_'
 WIN_HEIGHT = 300
 WIN_WIDTH = 800
 GEOMETERY = f'{WIN_WIDTH}x{WIN_HEIGHT}'
@@ -78,7 +80,7 @@ class MyPhotosWindow:
         frame = tk.Frame(master, padx=10, pady=10)
         scrollbar = tk.Scrollbar(frame)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        progress_box = tk.Text(frame, height=20, padx=10, pady=10, yscrollcommand=scrollbar.set)
+        progress_box = tk.Text(frame, height=5, padx=10, pady=10, yscrollcommand=scrollbar.set)
         progress_box.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.elements[name] = progress_box
@@ -90,6 +92,17 @@ class MyPhotosWindow:
 
         path = filedialog.askdirectory()
         self.elements[name].config(text=path)
+
+    # -------------------------------------------
+
+    def _update_progress(self, name, text):
+        """ Updates a progress text box """
+
+        if isinstance(text, list):
+            text = '\n'.join(text)
+        self.elements[name].insert(tk.END, text + '\n')
+        self.elements[name].see(tk.END)
+        self.main.update()
 
 
 # -----------------------------------------------

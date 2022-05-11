@@ -19,6 +19,8 @@ import shutil
 import piexif
 from PIL import Image
 
+import myphotos
+
 # -----------------------------------------------
 
 
@@ -39,7 +41,7 @@ def main(source, target):
     # -------------------------------------------
 
     now = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-    non_images = os.path.join(target, f'_non_images_{now}')
+    non_photos = os.path.join(target, f'{myphotos.NON_PHOTOS}{now}')
 
     for i in os.listdir(source):
         progress = []
@@ -69,9 +71,10 @@ def main(source, target):
             progress_append('.. Saved')
         else:
             progress_append('.. Non image file')
-            if not os.path.isdir(non_images):
-                os.makedirs(non_images)
-            shutil.copy(source_file, os.path.join(non_images, i))
+            if not os.path.isdir(non_photos):
+                os.makedirs(non_photos)
+            shutil.copy(source_file, os.path.join(non_photos, i))
+            progress_append('.. Copied')
 
         yield progress
 

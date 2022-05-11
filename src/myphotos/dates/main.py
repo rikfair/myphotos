@@ -15,10 +15,11 @@
 import tkinter as tk
 
 import myphotos
-from myphotos.dates import filename_to_photo
+from myphotos.dates import filename_to_photo, photo_to_filename
 
 # -----------------------------------------------
 
+_BOK_PROGRESS = 'bok_progress'
 _BOK_SELECTOR = 'bok_selector'
 _BTN_SOURCE = 'btn_source'
 _BTN_TARGET = 'btn_target'
@@ -52,10 +53,10 @@ class _DateInterface(myphotos.MyPhotosWindow):
 
         if show:
             self.elements[_FRM_PROGRESS].pack(anchor=tk.N, side=tk.LEFT, fill=tk.BOTH, expand=True)
-            # self.elements[_BOK_SELE].pack(side=tk.RIGHT)
+            self.elements[_BOK_PROGRESS].pack(side=tk.RIGHT)
         else:
             self.elements[_FRM_PROGRESS].pack_forget()
-            # self.elements[_BOK_SELECTOR].pack_forget()
+            self.elements[_BOK_PROGRESS].pack_forget()
 
     # -------------------------------------------
 
@@ -87,6 +88,15 @@ class _DateInterface(myphotos.MyPhotosWindow):
 
         self.elements[_FRM_PROGRESS] = tk.Frame(self.main, bg='yellow')
         self._create_progress_box(self.elements[_FRM_PROGRESS], _TXB_PROGRESS)
+        self._create_ok_button(_BOK_PROGRESS, self.ok_progress)
+
+    # -------------------------------------------
+
+    def ok_progress(self):
+        """ OK button command for the progress frame """
+
+        self.draw_progress_window(False)
+        self.draw_selector_window(True)
 
     # -------------------------------------------
 
@@ -102,12 +112,12 @@ class _DateInterface(myphotos.MyPhotosWindow):
         # ---
         self.draw_selector_window(False)
         self.draw_progress_window(True)
+        self.main.update()
         # ---
-        func = filename_to_photo if _OMU_OPTIONS == _OPTIONS[0] else filename_to_photo
+        func = filename_to_photo if _OMU_OPTIONS == _OPTIONS[0] else photo_to_filename
         for p in func.main(data[_TXT_SOURCE], data[_TXT_TARGET]):
-            self.elements[_TXB_PROGRESS].insert(tk.END, '\n'.join(p))
-            self.elements[_TXB_PROGRESS].see(tk.END)
-        self.elements[_TXB_PROGRESS].insert(tk.END, '\n\nCompleted.')
+            self._update_progress(_TXB_PROGRESS, p)
+        self._update_progress(_TXB_PROGRESS, '\nCompleted.')
 
 
 # -----------------------------------------------
