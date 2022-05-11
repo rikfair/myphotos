@@ -72,6 +72,19 @@ class MyPhotosWindow:
 
     # -------------------------------------------
 
+    def _create_progress_box(self, master, name):
+        """ Creates a scrollable text area for showing progress"""
+
+        frame = tk.Frame(master, padx=10, pady=10)
+        scrollbar = tk.Scrollbar(frame)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        progress_box = tk.Text(frame, height=20, padx=10, pady=10, yscrollcommand=scrollbar.set)
+        progress_box.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.elements[name] = progress_box
+
+    # -------------------------------------------
+
     def _set_directory(self, name):
         """ Sets the directory """
 

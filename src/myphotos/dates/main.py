@@ -14,15 +14,17 @@
 
 import tkinter as tk
 
-import myphotos
+import myphotos.dates.filename_to_photo
 
 # -----------------------------------------------
 
 _BOK_SELECTOR = 'bok_selector'
 _BTN_SOURCE = 'btn_source'
 _BTN_TARGET = 'btn_target'
+_FRM_PROGRESS = 'frm_progress'
 _FRM_SELECTOR = 'frm_select'
 _OMU_OPTIONS = 'omu_options'
+_TXB_PROGRESS = 'txb_progress'
 _TXT_SOURCE = 'txt_source'
 _TXT_TARGET = 'txt_target'
 
@@ -40,15 +42,31 @@ class _DateInterface(myphotos.MyPhotosWindow):
 
         super().__init__(win, 'Dates')
         self.initialise_elements()
-        self.draw_selector_window()
+        self.draw_selector_window(True)
 
     # -------------------------------------------
 
-    def draw_selector_window(self):
+    def draw_progress_window(self, show):
         """ Packs the selector window objects """
 
-        self.elements[_FRM_SELECTOR].pack(anchor=tk.N, side=tk.LEFT)
-        self.elements[_BOK_SELECTOR].pack(side=tk.RIGHT)
+        if show:
+            self.elements[_FRM_PROGRESS].pack(anchor=tk.N, side=tk.LEFT, fill=tk.BOTH, expand=True)
+            # self.elements[_BOK_SELE].pack(side=tk.RIGHT)
+        else:
+            self.elements[_FRM_PROGRESS].pack_forget()
+            # self.elements[_BOK_SELECTOR].pack_forget()
+
+    # -------------------------------------------
+
+    def draw_selector_window(self, show):
+        """ Packs the selector window objects """
+
+        if show:
+            self.elements[_FRM_SELECTOR].pack(anchor=tk.N, side=tk.LEFT)
+            self.elements[_BOK_SELECTOR].pack(side=tk.RIGHT)
+        else:
+            self.elements[_FRM_SELECTOR].pack_forget()
+            self.elements[_BOK_SELECTOR].pack_forget()
 
     # -------------------------------------------
 
@@ -66,6 +84,9 @@ class _DateInterface(myphotos.MyPhotosWindow):
         self.elements[_TXT_TARGET].config(text=data.get(_TXT_TARGET, ''))
         self.elements[_OMU_OPTIONS].set(data.get(_OMU_OPTIONS, _OPTIONS[0]))
 
+        self.elements[_FRM_PROGRESS] = tk.Frame(self.main, bg='yellow')
+        self._create_progress_box(self.elements[_FRM_PROGRESS], _TXB_PROGRESS)
+
     # -------------------------------------------
 
     def ok_selector(self):
@@ -77,6 +98,15 @@ class _DateInterface(myphotos.MyPhotosWindow):
             _OMU_OPTIONS: self.elements[_OMU_OPTIONS].get()
         }
         myphotos.set_saved_data(data, _SAVED_DATA)
+        # ---
+        self.draw_selector_window(False)
+        self.draw_progress_window(True)
+        # ---
+        go = myphotos.dates.filename_to_photo if _OMU_OPTIONS == _OPTIONS[0] else myphotos.dates.filename_to_photo
+        for p in go.main(data[_TXT_SOURCE], data[_TXT_TARGET]):
+            self.elements[_TXB_PROGRESS].insert(tk.END, '\n'.join(p))
+            self.elements[_TXB_PROGRESS].see(tk.END)
+        self.elements[_TXB_PROGRESS].insert(tk.END, '\n\nCompleted.')
 
 
 # -----------------------------------------------
