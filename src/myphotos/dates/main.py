@@ -18,11 +18,16 @@ import myphotos
 
 # -----------------------------------------------
 
+_BOK_SELECTOR = 'bok_selector'
 _BTN_SOURCE = 'btn_source'
 _BTN_TARGET = 'btn_target'
-_FRM_SELECT = 'frm_select'
+_FRM_SELECTOR = 'frm_select'
+_OMU_OPTIONS = 'omu_options'
 _TXT_SOURCE = 'txt_source'
 _TXT_TARGET = 'txt_target'
+
+_OPTIONS = ['Photo to Filename', 'Filename to Photo']
+_SAVED_DATA = 'dates'
 
 # -----------------------------------------------
 
@@ -35,25 +40,43 @@ class _DateInterface(myphotos.MyPhotosWindow):
 
         super().__init__(win, 'Dates')
         self.initialise_elements()
-        self.draw_select_window()
+        self.draw_selector_window()
 
     # -------------------------------------------
 
-    def draw_select_window(self):
-        """ Packs the select window objects """
+    def draw_selector_window(self):
+        """ Packs the selector window objects """
 
-        self.elements[_FRM_SELECT].pack(side=tk.LEFT, anchor=tk.N)
+        self.elements[_FRM_SELECTOR].pack(anchor=tk.N, side=tk.LEFT)
+        self.elements[_BOK_SELECTOR].pack(side=tk.RIGHT)
 
     # -------------------------------------------
 
     def initialise_elements(self):
         """ Initialises the tkinter elements for this interface """
 
-        self.elements[_FRM_SELECT] = tk.Frame(self.win)
-        self._create_directory_selector(self.elements[_FRM_SELECT], _TXT_SOURCE, 'Source')
-        self._create_directory_selector(self.elements[_FRM_SELECT], _TXT_TARGET, 'Target')
+        self.elements[_FRM_SELECTOR] = tk.Frame(self.main, bg='red')
+        self._create_directory_selector(self.elements[_FRM_SELECTOR], _TXT_SOURCE, 'Source')
+        self._create_directory_selector(self.elements[_FRM_SELECTOR], _TXT_TARGET, 'Target')
+        self._create_options_menu(self.elements[_FRM_SELECTOR], _OMU_OPTIONS, _OPTIONS)
+        self._create_ok_button(_BOK_SELECTOR, self.ok_selector)
+
+        data = myphotos.get_saved_data(_SAVED_DATA)
+        self.elements[_TXT_SOURCE].config(text=data.get(_TXT_SOURCE, ''))
+        self.elements[_TXT_TARGET].config(text=data.get(_TXT_TARGET, ''))
+        self.elements[_OMU_OPTIONS].set(data.get(_OMU_OPTIONS, _OPTIONS[0]))
 
     # -------------------------------------------
+
+    def ok_selector(self):
+        """ OK button command for the selector frame """
+
+        data = {
+            _TXT_SOURCE: self.elements[_TXT_SOURCE].cget('text'),
+            _TXT_TARGET: self.elements[_TXT_TARGET].cget('text'),
+            _OMU_OPTIONS: self.elements[_OMU_OPTIONS].get()
+        }
+        myphotos.set_saved_data(data, _SAVED_DATA)
 
 
 # -----------------------------------------------
