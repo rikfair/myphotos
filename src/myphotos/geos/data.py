@@ -54,6 +54,7 @@ def _get_dms_from_dd(dd):
 
 
 def get_data(source):
+    """ Gets the latitude and longitude data from the images in the source directory """
 
     data = []
 

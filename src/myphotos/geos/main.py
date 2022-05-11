@@ -42,16 +42,24 @@ class _GeoInterface(myphotos.MyPhotosWindow):
         super().__init__(win, 'Dates')
         self.initialise_elements()
         self.draw_selector_window(True)
+        self.geo_data = []
+        self.geo_elements = {}
 
     # -------------------------------------------
 
     def create_geo_record(self, geo):
         """ Creates a geo record """
 
-        frame = tk.Frame(_FRM_GEOS)
-        label = tk.Label(frame, text=geo['filename'])
-        lat_long = tk.StringVar()
-        entry = tk.Entry(frame)
+        record = len(self.geo_elements)
+
+        filename = tk.Label(self.elements[_FRM_GEOS], text=geo['filename'])
+        filename.grid(row=record, column=0)
+        self.geo_elements[geo['filename'] + '#filename'] = filename
+
+        coordinates = tk.Entry(self.elements[_FRM_GEOS])
+        coordinates.insert(tk.END, geo['coordinates'])
+        coordinates.grid(row=record, column=1)
+        self.geo_elements[geo['filename']] = coordinates
 
     # -------------------------------------------
 
@@ -113,8 +121,22 @@ class _GeoInterface(myphotos.MyPhotosWindow):
     def ok_geos(self):
         """ OK button command for the geos frame """
 
+        update_data = []
+        for geo in self.geo_data:
+            fn = geo['filename']
+            if geo['coordinates'] != self.geo_elements[fn].get():
+                update_data.append({
+                    'file_path': geo['file_path'],
+                    'coordinates': self.geo_elements[fn].get()
+                })
+            self.geo_elements[fn + '#filename'].destroy()
+            self.geo_elements[fn].destroy()
+
+        self.geo_elements = {}
         self.draw_geos_window(False)
         self.draw_progress_window(True)
+
+        print(update_data)
 
     # -------------------------------------------
 
@@ -135,9 +157,9 @@ class _GeoInterface(myphotos.MyPhotosWindow):
         self.draw_selector_window(False)
         self.draw_geos_window(True)
         # ---
-        geos = myphotos.geos.data.get_data(data[_TXT_SOURCE])
-        for geo in geos:
-            print(geo)
+        self.geo_data = myphotos.geos.data.get_data(data[_TXT_SOURCE])
+        for geo in self.geo_data:
+            self.create_geo_record(geo)
 
 
 # -----------------------------------------------
