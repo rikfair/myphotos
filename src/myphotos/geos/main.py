@@ -39,7 +39,7 @@ class _GeoInterface(myphotos.MyPhotosWindow):
     def __init__(self, win):
         """ Initialises the date interface """
 
-        super().__init__(win, 'Dates')
+        super().__init__(win, 'Geos')
         self.initialise_elements()
         self.draw_selector_window(True)
         self.geo_data = []
@@ -77,6 +77,8 @@ class _GeoInterface(myphotos.MyPhotosWindow):
 
     def draw_progress_window(self, show):
         """ Packs the progress window objects """
+
+        self.elements[_TXB_PROGRESS].delete('1.0', tk.END)
 
         if show:
             self.elements[_FRM_PROGRESS].pack(anchor=tk.N, side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -136,7 +138,9 @@ class _GeoInterface(myphotos.MyPhotosWindow):
         self.draw_geos_window(False)
         self.draw_progress_window(True)
 
-        print(update_data)
+        for p in myphotos.geos.data.set_data(update_data):
+            self._update_progress(_TXB_PROGRESS, p)
+        self._update_progress(_TXB_PROGRESS, '\nCompleted.')
 
     # -------------------------------------------
 

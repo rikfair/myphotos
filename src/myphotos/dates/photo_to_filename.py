@@ -43,9 +43,9 @@ def main(source, target):
     now = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
     errors = os.path.join(target, f'{myphotos.ERRORS}{now}')
     non_photos = os.path.join(target, f'{myphotos.NON_PHOTOS}{now}')
+    progress = ['Running Photo to Filename\n']
 
     for i in os.listdir(source):
-        progress = []
         progress_append(f'Processing: {i}')
         source_file = os.path.join(source, i)
 
@@ -95,6 +95,7 @@ def main(source, target):
             progress_append('.. Copied')
 
         yield progress
+        progress = []
 
 
 # -----------------------------------------------

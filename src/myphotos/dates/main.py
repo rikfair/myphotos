@@ -30,7 +30,7 @@ _TXB_PROGRESS = 'txb_progress'
 _TXT_SOURCE = 'txt_source'
 _TXT_TARGET = 'txt_target'
 
-_OPTIONS = ['Photo to Filename', 'Filename to Photo']
+_OPTIONS = ['Filename to Photo', 'Photo to Filename']
 _SAVED_DATA = 'dates'
 
 # -----------------------------------------------
@@ -114,7 +114,7 @@ class _DateInterface(myphotos.MyPhotosWindow):
         self.draw_progress_window(True)
         self.main.update()
         # ---
-        func = filename_to_photo if _OMU_OPTIONS == _OPTIONS[0] else photo_to_filename
+        func = filename_to_photo if data[_OMU_OPTIONS] == _OPTIONS[0] else photo_to_filename
         for p in func.main(data[_TXT_SOURCE], data[_TXT_TARGET]):
             self._update_progress(_TXB_PROGRESS, p)
         self._update_progress(_TXB_PROGRESS, '\nCompleted.')
