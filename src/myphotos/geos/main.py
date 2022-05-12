@@ -25,6 +25,7 @@ _BTN_SOURCE = 'btn_source'
 _FRM_GEOS = 'frm_geos'
 _FRM_PROGRESS = 'frm_progress'
 _FRM_SELECTOR = 'frm_select'
+_SCV_GEOS = 'scv_geos'
 _TXB_PROGRESS = 'txb_progress'
 _TXT_SOURCE = 'txt_source'
 
@@ -52,11 +53,11 @@ class _GeoInterface(myphotos.MyPhotosWindow):
 
         record = len(self.geo_elements)
 
-        filename = tk.Label(self.elements[_FRM_GEOS], text=geo['filename'])
+        filename = tk.Label(self.elements[_SCV_GEOS], text=geo['filename'])
         filename.grid(row=record, column=0)
         self.geo_elements[geo['filename'] + '#filename'] = filename
 
-        coordinates = tk.Entry(self.elements[_FRM_GEOS])
+        coordinates = tk.Entry(self.elements[_SCV_GEOS])
         coordinates.insert(tk.END, geo['coordinates'])
         coordinates.grid(row=record, column=1)
         self.geo_elements[geo['filename']] = coordinates
@@ -67,7 +68,7 @@ class _GeoInterface(myphotos.MyPhotosWindow):
         """ Packs the geos window objects """
 
         if show:
-            self.elements[_FRM_GEOS].pack(anchor=tk.N, side=tk.LEFT, fill=tk.BOTH, expand=True)
+            self.elements[_FRM_GEOS].pack(anchor=tk.N, side=tk.TOP, fill=tk.BOTH, expand=True)
             self.elements[_BOK_GEOS].pack(side=tk.RIGHT)
         else:
             self.elements[_FRM_GEOS].pack_forget()
@@ -112,6 +113,7 @@ class _GeoInterface(myphotos.MyPhotosWindow):
         self.elements[_TXT_SOURCE].config(text=data.get(_TXT_SOURCE, ''))
 
         self.elements[_FRM_GEOS] = tk.Frame(self.main, bg='yellow')
+        self.create_scroll_canvas(self.elements[_FRM_GEOS], _SCV_GEOS)
         self._create_ok_button(_BOK_GEOS, self.ok_geos)
 
         self.elements[_FRM_PROGRESS] = tk.Frame(self.main, bg='yellow')

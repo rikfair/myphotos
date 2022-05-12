@@ -87,6 +87,21 @@ class MyPhotosWindow:
 
     # -------------------------------------------
 
+    def create_scroll_canvas(self, master, name):
+        """ Creates a scrollable canvas within a frame """
+
+        canvas = tk.Canvas(master, height=10)  # Presence of height parameter stops ok button being squashed
+        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar = tk.Scrollbar(master, command=canvas.yview)
+        scrollbar.pack(side=tk.LEFT, fill=tk.Y)
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.bind('<Configure>', lambda _: canvas.configure(scrollregion=canvas.bbox(tk.ALL)))
+        canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), tk.UNITS))
+        self.elements[name] = tk.Frame(canvas)
+        canvas.create_window((0, 0), window=self.elements[name], anchor='nw')
+
+    # -------------------------------------------
+
     def _set_directory(self, name):
         """ Sets the directory """
 
