@@ -103,7 +103,10 @@ def main(source, target):
 # -----------------------------------------------
 
 if __name__ == '__main__':
-    main(input('Enter source directory:'), input('Enter target directory:'))
+    _sd = input('Enter source directory:')
+    _td = input('Enter target directory:')
+    for _i, _ in enumerate(main(_sd, _td)):
+        print(f'--- Loop {_i} ---')
 
 # -----------------------------------------------
 # End.
