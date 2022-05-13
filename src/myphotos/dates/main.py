@@ -51,6 +51,8 @@ class _DateInterface(myphotos.MyPhotosWindow):
     def draw_progress_window(self, show):
         """ Packs the progress window objects """
 
+        self.elements[_TXB_PROGRESS].delete('1.0', tk.END)
+
         if show:
             self.elements[_FRM_PROGRESS].pack(anchor=tk.N, side=tk.LEFT, fill=tk.BOTH, expand=True)
             self.elements[_BOK_PROGRESS].pack(side=tk.RIGHT)

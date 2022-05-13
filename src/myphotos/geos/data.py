@@ -31,9 +31,9 @@ def _get_dd_from_dms(dms, ref):
         minutes = dms[1][0] / dms[1][1] / 60 * direction
         seconds = dms[2][0] / dms[2][1] / 3600 * direction
 
-        return round(degrees + minutes + seconds, 5)
+        return round(degrees + minutes + seconds, 7)
 
-    return None
+    return ''
 
 
 # -----------------------------------------------
@@ -78,7 +78,7 @@ def get_data(source):
                 gps = piexif.load(img.info['exif'])['GPS']
                 latitude = _get_dd_from_dms(gps[piexif.GPSIFD.GPSLatitude], gps[piexif.GPSIFD.GPSLatitudeRef])
                 longitude = _get_dd_from_dms(gps[piexif.GPSIFD.GPSLongitude], gps[piexif.GPSIFD.GPSLongitudeRef])
-                img_data['coordinates'] = f'{latitude}, {longitude}'
+                img_data['coordinates'] = f'{latitude}, {longitude}' if latitude or longitude else ''
 
             except KeyError:
                 pass
@@ -158,7 +158,6 @@ def set_data(data):
                 exif_dict['GPS'][piexif.GPSIFD.GPSDestBearing] = (0, 1)
             else:
                 progress_append('... Removing coordinates')
-
 
             if piexif.ImageIFD.Make not in exif_dict['0th']:
                 exif_dict['0th'][piexif.ImageIFD.Make] = 'Unknown'

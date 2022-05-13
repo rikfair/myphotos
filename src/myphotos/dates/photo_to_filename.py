@@ -60,6 +60,8 @@ def main(source, target):
                 # ---
                 photo_no = 0
                 target_path = os.path.join(target, exif_date[2:10])
+                if not os.path.isdir(target_path):
+                    os.makedirs(target_path)
                 target_file = os.path.join(target_path, f'{exif_date}.jpg')
                 while os.path.isfile(target_file):
                     photo_no += 1

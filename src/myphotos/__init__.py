@@ -96,7 +96,7 @@ class MyPhotosWindow:
         scrollbar.pack(side=tk.LEFT, fill=tk.Y)
         canvas.configure(yscrollcommand=scrollbar.set)
         canvas.bind('<Configure>', lambda _: canvas.configure(scrollregion=canvas.bbox(tk.ALL)))
-        canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), tk.UNITS))
+        canvas.bind("<MouseWheel>", lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), tk.UNITS))
         self.elements[name] = tk.Frame(canvas)
         canvas.create_window((0, 0), window=self.elements[name], anchor='nw')
 
