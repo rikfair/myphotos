@@ -42,7 +42,7 @@ class _DateInterface(myphotos.MyPhotosWindow):
     def __init__(self, win):
         """ Initialises the date interface """
 
-        super().__init__(win, 'Dates')
+        super().__init__(win, myphotos.DATES)
         self.initialise_elements()
         self.draw_selector_window(True)
 
@@ -77,20 +77,20 @@ class _DateInterface(myphotos.MyPhotosWindow):
     def initialise_elements(self):
         """ Initialises the tkinter elements for this interface """
 
-        self.elements[_FRM_SELECTOR] = tk.Frame(self.main, bg='red')
-        self._create_directory_selector(self.elements[_FRM_SELECTOR], _TXT_SOURCE, 'Source')
-        self._create_directory_selector(self.elements[_FRM_SELECTOR], _TXT_TARGET, 'Target')
-        self._create_options_menu(self.elements[_FRM_SELECTOR], _OMU_OPTIONS, _OPTIONS)
-        self._create_ok_button(_BOK_SELECTOR, self.ok_selector)
+        self.elements[_FRM_SELECTOR] = tk.Frame(self.main)
+        self.create_directory_selector(self.elements[_FRM_SELECTOR], _TXT_SOURCE, 'Source')
+        self.create_directory_selector(self.elements[_FRM_SELECTOR], _TXT_TARGET, 'Target')
+        self.create_options_menu(self.elements[_FRM_SELECTOR], _OMU_OPTIONS, _OPTIONS)
+        self.create_ok_button(_BOK_SELECTOR, self.ok_selector)
 
         data = myphotos.get_saved_data(_SAVED_DATA)
         self.elements[_TXT_SOURCE].config(text=data.get(_TXT_SOURCE, ''))
         self.elements[_TXT_TARGET].config(text=data.get(_TXT_TARGET, ''))
         self.elements[_OMU_OPTIONS].set(data.get(_OMU_OPTIONS, _OPTIONS[0]))
 
-        self.elements[_FRM_PROGRESS] = tk.Frame(self.main, bg='yellow')
-        self._create_progress_box(self.elements[_FRM_PROGRESS], _TXB_PROGRESS)
-        self._create_ok_button(_BOK_PROGRESS, self.ok_progress)
+        self.elements[_FRM_PROGRESS] = tk.Frame(self.main)
+        self.create_progress_box(self.elements[_FRM_PROGRESS], _TXB_PROGRESS)
+        self.create_ok_button(_BOK_PROGRESS, self.ok_progress)
 
     # -------------------------------------------
 
@@ -118,8 +118,8 @@ class _DateInterface(myphotos.MyPhotosWindow):
         # ---
         func = filename_to_photo if data[_OMU_OPTIONS] == _OPTIONS[0] else photo_to_filename
         for p in func.main(data[_TXT_SOURCE], data[_TXT_TARGET]):
-            self._update_progress(_TXB_PROGRESS, p)
-        self._update_progress(_TXB_PROGRESS, '\nCompleted.')
+            self.update_progress(_TXB_PROGRESS, p)
+        self.update_progress(_TXB_PROGRESS, '\nCompleted.')
 
 
 # -----------------------------------------------

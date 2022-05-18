@@ -49,7 +49,7 @@ def main(source, target):
         source_file = os.path.join(source, i)
         target_file = os.path.join(target, i[2:10], i)
 
-        if (i.upper().endswith('.JPG')) or (i.upper().endswith('.JPEG')):
+        if i.upper().endswith('.JPG') or i.upper().endswith('.JPEG'):
             img = Image.open(source_file)
             try:
                 exif = piexif.load(img.info['exif'])

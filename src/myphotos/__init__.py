@@ -19,11 +19,16 @@ from tkinter import filedialog
 
 # -----------------------------------------------
 
+CHECK = 'Check'
+DATES = 'Dates'
+GEOS = 'Geos'
+BG = {CHECK: 'lightgreen', DATES: 'cornflowerblue', GEOS: 'gold', 'default': 'lightgrey'}
+
 ERRORS = '_errors_'
 NON_PHOTOS = '_non-photos_'
 WIN_HEIGHT = 300
-WIN_WIDTH = 800
-GEOMETERY = f'{WIN_WIDTH}x{WIN_HEIGHT}'
+WIN_WIDTH = 700
+GEOMETRY = f'{WIN_WIDTH}x{WIN_HEIGHT}'
 
 # -----------------------------------------------
 
@@ -33,21 +38,22 @@ class MyPhotosWindow:
 
     def __init__(self, win, title):
         win.title(f'My Photos - {title}')
-        win.geometry(GEOMETERY)
-        self.main = tk.Frame(win, bg='green')
+        win.geometry(GEOMETRY)
+        self.title = title
+        self.main = tk.Frame(win, relief=tk.RAISED, borderwidth=4)
         self.main.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        self.btns = tk.Frame(win, height=50, bg='blue')
+        self.btns = tk.Frame(win, height=50, bg=BG.get(title, BG['default']))
         self.btns.pack(side=tk.BOTTOM, fill=tk.X)
-        self.elements = {}
+        self.elements = {'win': win}
 
     # -------------------------------------------
 
-    def _create_directory_selector(self, master, name, label):
+    def create_directory_selector(self, master, name, label):
         """ Creates a directory selector frame """
 
         frame = tk.Frame(master)
         tk.Button(
-            master=frame, text=f'Select {label} Directory', width=24, command=lambda: self._set_directory(name)
+            master=frame, text=f'Select {label} Directory', width=24, command=lambda: self.set_directory(name)
         ).pack(side=tk.LEFT)
         self.elements[name] = tk.Label(frame)
         self.elements[name].pack(side=tk.LEFT, padx=10)
@@ -55,16 +61,16 @@ class MyPhotosWindow:
 
     # -------------------------------------------
 
-    def _create_ok_button(self, name, command):
+    def create_ok_button(self, name, command):
         """ Creates an ok button in the bottom right """
 
-        frame = tk.Frame(self.btns)
+        frame = tk.Frame(self.btns, bg=BG.get(self.title, BG['default']))
         tk.Button(frame, text='OK', width=10, command=command).pack(side=tk.RIGHT, padx=10, pady=10)
         self.elements[name] = frame
 
     # -------------------------------------------
 
-    def _create_options_menu(self, master, name, options):
+    def create_options_menu(self, master, name, options):
         """ Creates an options menu """
 
         frame = tk.Frame(master)
@@ -74,7 +80,7 @@ class MyPhotosWindow:
 
     # -------------------------------------------
 
-    def _create_progress_box(self, master, name):
+    def create_progress_box(self, master, name):
         """ Creates a scrollable text area for showing progress"""
 
         frame = tk.Frame(master, padx=10, pady=10)
@@ -102,7 +108,7 @@ class MyPhotosWindow:
 
     # -------------------------------------------
 
-    def _set_directory(self, name):
+    def set_directory(self, name):
         """ Sets the directory """
 
         path = filedialog.askdirectory()
@@ -110,7 +116,7 @@ class MyPhotosWindow:
 
     # -------------------------------------------
 
-    def _update_progress(self, name, text):
+    def update_progress(self, name, text):
         """ Updates a progress text box """
 
         if isinstance(text, list):

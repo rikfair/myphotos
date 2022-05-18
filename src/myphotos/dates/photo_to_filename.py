@@ -49,7 +49,7 @@ def main(source, target):
         progress_append(f'Processing: {i}')
         source_file = os.path.join(source, i)
 
-        if (i.upper().endswith('.JPG')) or (i.upper().endswith('.JPEG')):
+        if i.upper().endswith('.JPG') or i.upper().endswith('.JPEG'):
             img = Image.open(source_file)
             try:
                 exif_dict = piexif.load(img.info['exif'])
