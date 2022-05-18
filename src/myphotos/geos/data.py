@@ -71,7 +71,7 @@ def get_data(source):
             'coordinates': ''
         }
 
-        if i.upper().endswith('.JPG') and os.path.isfile(file_path):
+        if (i.upper().endswith('.JPG') or i.upper().endswith('.JPEG')) and os.path.isfile(file_path):
             print(f'Processing: {i}')
             img = Image.open(file_path)
             try:
