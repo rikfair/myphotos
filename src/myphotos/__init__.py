@@ -36,15 +36,22 @@ GEOMETRY = f'{WIN_WIDTH}x{WIN_HEIGHT}'
 class MyPhotosWindow:
     """ Main window and common functions for the myphoto tkinter interface """
 
-    def __init__(self, win, title):
-        win.title(f'My Photos - {title}')
-        win.geometry(GEOMETRY)
+    def __init__(self, win, title, return_frame=None):
         self.title = title
         self.main = tk.Frame(win, relief=tk.RAISED, borderwidth=4)
-        self.main.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.btns = tk.Frame(win, height=50, bg=BG.get(title, BG['default']))
-        self.btns.pack(side=tk.BOTTOM, fill=tk.X)
-        self.elements = {'win': win}
+        self.elements = {'win': win, 'return_frame': return_frame}
+
+    # -------------------------------------------
+
+    def go(self, buttons=True):
+        """ And they're off... """
+
+        self.elements['win'].title(f'My Photos - {self.title}')
+        self.elements['win'].geometry(GEOMETRY)
+        self.main.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        if buttons:
+            self.btns.pack(side=tk.BOTTOM, fill=tk.X)
 
     # -------------------------------------------
 
@@ -65,6 +72,8 @@ class MyPhotosWindow:
         """ Creates an ok button in the bottom right """
 
         frame = tk.Frame(self.btns, bg=BG.get(self.title, BG['default']))
+        if self.elements['return_frame']:
+            tk.Button(frame, text='<', width=10, command=self.return_to_frame).pack(side=tk.LEFT, padx=10, pady=10)
         tk.Button(frame, text='OK', width=10, command=command).pack(side=tk.RIGHT, padx=10, pady=10)
         self.elements[name] = frame
 
@@ -105,6 +114,15 @@ class MyPhotosWindow:
         canvas.bind("<MouseWheel>", lambda e: canvas.yview_scroll(int(-1 * (e.delta / 120)), tk.UNITS))
         self.elements[name] = tk.Frame(canvas)
         canvas.create_window((0, 0), window=self.elements[name], anchor='nw')
+
+    # -------------------------------------------
+
+    def return_to_frame(self):
+        """ Redraws the return frame """
+
+        self.main.pack_forget()
+        self.btns.pack_forget()
+        self.elements['return_frame'].pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     # -------------------------------------------
 

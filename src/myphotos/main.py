@@ -23,9 +23,9 @@ import myphotos.geos.main
 _FRM_LAUNCH = 'frm_launch'
 
 _STEPS = {
-    1: {'label': myphotos.DATES, 'command': myphotos.dates.main.main},
-    2: {'label': myphotos.GEOS, 'command': myphotos.geos.main.main},
-    3: {'label': myphotos.CHECK, 'command': myphotos.check.main.main}
+    1: {'label': myphotos.DATES, 'command': myphotos.dates.main.DateInterface},
+    2: {'label': myphotos.GEOS, 'command': myphotos.geos.main.GeoInterface},
+    3: {'label': myphotos.CHECK, 'command': myphotos.check.main.CheckInterface}
 }
 
 # -----------------------------------------------
@@ -38,9 +38,18 @@ class _LaunchInterface(myphotos.MyPhotosWindow):
         """ Initialises the date interface """
 
         super().__init__(win, 'Launch')
+        super().go(buttons=False)
 
         self.win = win
-        self.btns.pack_forget()
+
+        # ---
+
+        self.steps = {}
+        for step in _STEPS:
+            self.steps[step] = _STEPS[step]['command'](self.win, self.main)
+
+        # ---
+
         self.elements[_FRM_LAUNCH] = tk.Frame(self.main, pady=20)
         for step, v in _STEPS.items():
             tk.Button(
@@ -59,8 +68,8 @@ class _LaunchInterface(myphotos.MyPhotosWindow):
     def launch(self, step):
         """ Launches the specified step"""
 
-        self.elements['win'].destroy()
-        _STEPS[step]['command']()
+        self.main.pack_forget()
+        self.steps[step].go()
 
 
 # -----------------------------------------------

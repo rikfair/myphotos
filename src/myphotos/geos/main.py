@@ -34,95 +34,100 @@ _SAVED_DATA = 'geos'
 # -----------------------------------------------
 
 
-class _GeoInterface(myphotos.MyPhotosWindow):
+class GeoInterface(myphotos.MyPhotosWindow):
     """ Date tkinter interface """
 
-    def __init__(self, win):
+    def __init__(self, win, return_frame=None):
         """ Initialises the date interface """
 
-        super().__init__(win, myphotos.GEOS)
-        self.initialise_elements()
-        self.draw_selector_window(True)
+        super().__init__(win, myphotos.GEOS, return_frame)
+        self._initialise_elements()
         self.geo_data = []
         self.geo_elements = {}
 
     # -------------------------------------------
 
-    def create_geo_record(self, geo):
+    def go(self, buttons=True):
+        super().go(buttons)
+        self._draw_selector_window(True)
+
+    # -------------------------------------------
+
+    def _create_geo_record(self, geo):
         """ Creates a geo record """
 
         record = len(self.geo_elements)
 
         filename = tk.Label(self.elements[_SCV_GEOS], text=geo['filename'])
-        filename.grid(row=record, column=0)
+        filename.grid(row=record, column=0, padx=6, pady=2)
         self.geo_elements[geo['filename'] + '#filename'] = filename
 
         coordinates = tk.Entry(self.elements[_SCV_GEOS])
         coordinates.insert(tk.END, geo['coordinates'])
-        coordinates.grid(row=record, column=1)
+        coordinates.grid(row=record, column=1, padx=6, pady=2)
         self.geo_elements[geo['filename']] = coordinates
 
     # -------------------------------------------
 
-    def draw_geos_window(self, show):
+    def _draw_geos_window(self, show):
         """ Packs the geos window objects """
 
         if show:
             self.elements[_FRM_GEOS].pack(anchor=tk.N, side=tk.TOP, fill=tk.BOTH, expand=True)
-            self.elements[_BOK_GEOS].pack(side=tk.RIGHT)
+            self.elements[_BOK_GEOS].pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
         else:
             self.elements[_FRM_GEOS].pack_forget()
             self.elements[_BOK_GEOS].pack_forget()
 
     # -------------------------------------------
 
-    def draw_progress_window(self, show):
+    def _draw_progress_window(self, show):
         """ Packs the progress window objects """
 
         self.elements[_TXB_PROGRESS].delete('1.0', tk.END)
 
         if show:
             self.elements[_FRM_PROGRESS].pack(anchor=tk.N, side=tk.LEFT, fill=tk.BOTH, expand=True)
-            self.elements[_BOK_PROGRESS].pack(side=tk.RIGHT)
+            self.elements[_BOK_PROGRESS].pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
         else:
             self.elements[_FRM_PROGRESS].pack_forget()
             self.elements[_BOK_PROGRESS].pack_forget()
 
     # -------------------------------------------
 
-    def draw_selector_window(self, show):
+    def _draw_selector_window(self, show):
         """ Packs the selector window objects """
 
         if show:
             self.elements[_FRM_SELECTOR].pack(anchor=tk.N, side=tk.LEFT)
-            self.elements[_BOK_SELECTOR].pack(side=tk.RIGHT)
+            self.elements[_BOK_SELECTOR].pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
         else:
             self.elements[_FRM_SELECTOR].pack_forget()
             self.elements[_BOK_SELECTOR].pack_forget()
 
     # -------------------------------------------
 
-    def initialise_elements(self):
+    def _initialise_elements(self):
         """ Initialises the tkinter elements for this interface """
 
         self.elements[_FRM_SELECTOR] = tk.Frame(self.main)
         self.create_directory_selector(self.elements[_FRM_SELECTOR], _TXT_SOURCE, 'Source')
-        self.create_ok_button(_BOK_SELECTOR, self.ok_selector)
+        self.create_ok_button(_BOK_SELECTOR, self._ok_selector)
 
         data = myphotos.get_saved_data(_SAVED_DATA)
         self.elements[_TXT_SOURCE].config(text=data.get(_TXT_SOURCE, ''))
 
         self.elements[_FRM_GEOS] = tk.Frame(self.main)
         self.create_scroll_canvas(self.elements[_FRM_GEOS], _SCV_GEOS)
-        self.create_ok_button(_BOK_GEOS, self.ok_geos)
+        self.create_ok_button(_BOK_GEOS, self._ok_geos)
 
         self.elements[_FRM_PROGRESS] = tk.Frame(self.main)
         self.create_progress_box(self.elements[_FRM_PROGRESS], _TXB_PROGRESS)
-        self.create_ok_button(_BOK_PROGRESS, self.ok_progress)
+        self.create_ok_button(_BOK_PROGRESS, self._ok_progress)
 
     # -------------------------------------------
 
-    def ok_geos(self):
+    def _ok_geos(self):
         """ OK button command for the geos frame """
 
         update_data = []
@@ -137,8 +142,8 @@ class _GeoInterface(myphotos.MyPhotosWindow):
             self.geo_elements[fn].destroy()
 
         self.geo_elements = {}
-        self.draw_geos_window(False)
-        self.draw_progress_window(True)
+        self._draw_geos_window(False)
+        self._draw_progress_window(True)
 
         for p in myphotos.geos.data.set_data(update_data):
             self.update_progress(_TXB_PROGRESS, p)
@@ -146,26 +151,26 @@ class _GeoInterface(myphotos.MyPhotosWindow):
 
     # -------------------------------------------
 
-    def ok_progress(self):
+    def _ok_progress(self):
         """ OK button command for the progress frame """
 
-        self.draw_progress_window(False)
-        self.draw_selector_window(True)
+        self._draw_progress_window(False)
+        self._draw_selector_window(True)
 
     # -------------------------------------------
 
-    def ok_selector(self):
+    def _ok_selector(self):
         """ OK button command for the selector frame """
 
         data = {_TXT_SOURCE: self.elements[_TXT_SOURCE].cget('text')}
         myphotos.set_saved_data(data, _SAVED_DATA)
         # ---
-        self.draw_selector_window(False)
-        self.draw_geos_window(True)
+        self._draw_selector_window(False)
+        self._draw_geos_window(True)
         # ---
         self.geo_data = myphotos.geos.data.get_data(data[_TXT_SOURCE])
         for geo in self.geo_data:
-            self.create_geo_record(geo)
+            self._create_geo_record(geo)
 
 
 # -----------------------------------------------
@@ -174,7 +179,7 @@ class _GeoInterface(myphotos.MyPhotosWindow):
 def main():
     """ Main function """
     win = tk.Tk()
-    _GeoInterface(win)
+    GeoInterface(win).go()
     win.mainloop()
 
 
