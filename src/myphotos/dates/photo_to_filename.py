@@ -42,10 +42,12 @@ def main(source, target):
 
     now = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
     errors = os.path.join(target, f'{myphotos.ERRORS}{now}')
+    mov_files = []
     non_photos = os.path.join(target, f'{myphotos.NON_PHOTOS}{now}')
     progress = ['Running Photo to Filename\n']
+    files = sorted(os.listdir(source))  # Ensures jpg comes before mov, for the iOS live files.
 
-    for i in os.listdir(source):
+    for i in files:
         progress_append(f'Processing: {i}')
         source_file = os.path.join(source, i)
 
@@ -77,6 +79,14 @@ def main(source, target):
                 # ---
                 exif_bytes = piexif.dump(exif_dict)
                 img.save(target_file, exif=exif_bytes)
+                # ---
+                # Check for iOS live mov file
+                mov_file = i.rsplit('.', 1)[0] + '.MOV'  # Assumes uppercase if not Windows
+                if mov_file in files:
+                    progress_append('.. Mov file found')
+                    shutil.copy(os.path.join(source, mov_file), os.path.join(target_path, f'{exif_date}.mov'))
+                    mov_files.append(mov_file)
+                # ---
 
             except KeyError:
                 progress_append('.. Exif not found')
@@ -88,6 +98,9 @@ def main(source, target):
             finally:
                 img.close()
                 del img
+
+        elif i in mov_files:
+            progress_append('.. Mov file already processed')
 
         else:
             progress_append('.. Non image file')
