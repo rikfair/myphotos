@@ -7,7 +7,7 @@ python: 3.10.4
 
 # Library Format
 To understand the utilities it helps to know the photo library format it's trying to maintain.
-Each year has it's own folder, and each event has its own sub-folder within the year.
+Each year has its own folder, and each event has its own sub-folder within the year.
 The year folder is simply the year. The event folders begin with the date and an optional description.
 Each photo is an ISO date format of when it was taken.
 
