@@ -28,7 +28,17 @@ First off is to add the exif date tags and rename and folderise the photos. If a
 
 This step creates a copy of the photos, if errors occur, they get seperated and if they're any videos or other non-image files they get split out too. The original files do not get changed.
 
-# Step 2 - Geos
+# Step 2 - Descriptions
+
+`myphotos.descs.main`
+
+After step 1 you should have the photos organised into date folders. Before selecting step 2, re-organise and merge these folders as desired and add a description too. So `\21-12-31` and `\22-01-01` may become `\31-12-31 New Years Party`.
+
+Once that's done, select the step 2 option. Select the folder and each photo anywhere under that folder, that doesn't already have a description, will be given the description from the directory. Use windows explorer, or the description field in the next step, to tweak specific images if you so wish.
+
+NB: Description is the title property in the windows explorer file properties 
+
+# Step 3 - Geos
 
 `myphotos.geos.main`
 
