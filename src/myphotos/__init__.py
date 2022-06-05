@@ -21,8 +21,9 @@ from tkinter import filedialog
 
 CHECK = 'Check'
 DATES = 'Dates'
+DESCS = 'Descriptions'
 GEOS = 'Geos'
-BG = {CHECK: 'lightgreen', DATES: 'cornflowerblue', GEOS: 'gold', 'default': 'lightgrey'}
+BG = {CHECK: 'lightgreen', DATES: 'cornflowerblue', DESCS: 'deeppink', GEOS: 'gold', 'default': 'lightgrey'}
 
 ERRORS = '_errors_'
 NON_PHOTOS = '_non-photos_'

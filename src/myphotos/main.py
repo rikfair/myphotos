@@ -16,6 +16,7 @@ import tkinter as tk
 
 import myphotos.check.main
 import myphotos.dates.main
+import myphotos.descs.main
 import myphotos.geos.main
 
 # -----------------------------------------------
@@ -24,8 +25,9 @@ _FRM_LAUNCH = 'frm_launch'
 
 _STEPS = {
     1: {'label': myphotos.DATES, 'command': myphotos.dates.main.DateInterface},
-    2: {'label': myphotos.GEOS, 'command': myphotos.geos.main.GeoInterface},
-    3: {'label': myphotos.CHECK, 'command': myphotos.check.main.CheckInterface}
+    2: {'label': myphotos.DESCS, 'command': myphotos.descs.main.DescInterface},
+    3: {'label': myphotos.GEOS, 'command': myphotos.geos.main.GeoInterface},
+    4: {'label': myphotos.CHECK, 'command': myphotos.check.main.CheckInterface}
 }
 
 # -----------------------------------------------

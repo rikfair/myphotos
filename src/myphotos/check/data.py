@@ -96,6 +96,16 @@ def main(source):
             # ---
 
             try:
+                if not exif_dict['0th'][piexif.ImageIFD.ImageDescription]:
+                    add_issue('No image description')
+                    continue
+            except KeyError:
+                add_issue('No image description element')
+                continue
+
+            # ---
+
+            try:
                 latitude = exif_dict['GPS'][piexif.GPSIFD.GPSLatitude]
                 longitude = exif_dict['GPS'][piexif.GPSIFD.GPSLongitude]
                 if latitude and longitude:

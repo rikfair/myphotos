@@ -57,7 +57,7 @@ def get_data(source):
     """
     Gets the latitude and longitude data from the images in the source directory
     :param source: String, the source directory
-    :return: List, of {filename, file_path, coordinates}
+    :return: List, of {filename, file_path, coordinates, description}
     """
 
     data = []
@@ -68,14 +68,18 @@ def get_data(source):
         img_data = {
             'filename': i,
             'file_path': file_path,
-            'coordinates': ''
+            'coordinates': '',
+            'description': ''
         }
 
         if (i.upper().endswith('.JPG') or i.upper().endswith('.JPEG')) and os.path.isfile(file_path):
             print(f'Processing: {i}')
             img = Image.open(file_path)
             try:
-                gps = piexif.load(img.info['exif'])['GPS']
+                exif_dict = piexif.load(img.info['exif'])
+                img_data['description'] = exif_dict.get(
+                    '0th', {}).get(piexif.ImageIFD.ImageDescription, b'').decode('UTF-8')
+                gps = exif_dict['GPS']
                 latitude = _get_dd_from_dms(gps[piexif.GPSIFD.GPSLatitude], gps[piexif.GPSIFD.GPSLatitudeRef])
                 longitude = _get_dd_from_dms(gps[piexif.GPSIFD.GPSLongitude], gps[piexif.GPSIFD.GPSLongitudeRef])
                 img_data['coordinates'] = f'{latitude}, {longitude}' if latitude or longitude else ''
@@ -95,7 +99,7 @@ def get_data(source):
 def set_data(data):
     """
     Sets the geo for the files which are passed in the data list
-    :param data: List, of {filename, file_path, coordinates}
+    :param data: List, of {filename, file_path, coordinates, description}
     """
 
     # -------------------------------------------
@@ -161,6 +165,8 @@ def set_data(data):
 
             if piexif.ImageIFD.Make not in exif_dict['0th']:
                 exif_dict['0th'][piexif.ImageIFD.Make] = 'Unknown'
+
+            exif_dict['0th'][piexif.ImageIFD.ImageDescription] = d['description'].encode('UTF-8')
 
             exif_bytes = piexif.dump(exif_dict)
             img.save(file_path, exif=exif_bytes)

@@ -21,7 +21,7 @@ from PIL import Image
 
 import myphotos
 
-# -----------------------------
+# -----------------------------------------------
 
 
 def main(source, target):
