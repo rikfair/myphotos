@@ -44,7 +44,7 @@ NB: Description is the title property in the windows explorer file properties
 
 For photos taken with my camera or downloaded, geo tags need to be added. Google maps is my friend here, use the `what's here` option to get the latitude and longitude, copy both in one go to the entry field.
 
-# Step 3 - Check
+# Step 4 - Check
 
 `myphotos.check.main`
 
