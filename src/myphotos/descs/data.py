@@ -69,7 +69,7 @@ def main(source):
                     progress_append('.. Creating 0th')
                     exif_dict['0th'] = {piexif.ImageIFD.ImageDescription: description}
                 elif (piexif.ImageIFD.ImageDescription not in exif_dict['0th']
-                      or not exif_dict['0th'][piexif.ImageIFD.ImageDescription]):
+                      or not exif_dict['0th'][piexif.ImageIFD.ImageDescription].strip()):
                     exif_dict['0th'][piexif.ImageIFD.ImageDescription] = description
                 else:
                     progress_append('.. Description exists')

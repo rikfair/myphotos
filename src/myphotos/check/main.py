@@ -43,6 +43,7 @@ class CheckInterface(myphotos.MyPhotosWindow):
 
     def go(self, buttons=True):
         super().go(buttons)
+        self._draw_progress_window(False)
         self._draw_selector_window(True)
 
     # -------------------------------------------

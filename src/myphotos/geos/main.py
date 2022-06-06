@@ -50,6 +50,13 @@ class GeoInterface(myphotos.MyPhotosWindow):
 
     def go(self, buttons=True):
         super().go(buttons)
+        for geo in self.geo_data:
+            fn = geo['filename']
+            self.geo_elements[fn + '#filename'].destroy()
+            self.geo_elements[fn].destroy()
+            self.dsc_elements[fn].destroy()
+        self._draw_geos_window(False)
+        self._draw_progress_window(False)
         self._draw_selector_window(True)
 
     # -------------------------------------------

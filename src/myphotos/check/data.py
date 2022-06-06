@@ -86,6 +86,16 @@ def main(source):
 
             # ---
 
+            if 'Exif' not in exif_dict:
+                add_issue('No Exif in exif')
+                continue
+
+            if piexif.ExifIFD.DateTimeOriginal not in exif_dict['Exif']:
+                add_issue('No DateTimeOriginal in Exif')
+                continue
+
+            # ---
+
             exif_date = str(exif_dict['Exif'][piexif.ExifIFD.DateTimeOriginal])
             exif_date = exif_date[2:21].replace(':', '-').replace(' ', 'T')
 
@@ -96,7 +106,7 @@ def main(source):
             # ---
 
             try:
-                if not exif_dict['0th'][piexif.ImageIFD.ImageDescription]:
+                if not exif_dict['0th'][piexif.ImageIFD.ImageDescription].strip():
                     add_issue('No image description')
                     continue
             except KeyError:
