@@ -48,24 +48,33 @@ def main(source, target):
         progress_append(f'Processing: {i}')
         source_file = os.path.join(source, i)
         target_file = os.path.join(target, i[2:10], i)
+        file_type = i.rsplit('.', 1)[1].upper() if '.' in i else ''
 
-        if i.upper().endswith('.JPG') or i.upper().endswith('.JPEG'):
+        if file_type in ['JPG', 'JPEG', 'PNG']:
             img = Image.open(source_file)
+
             try:
                 exif = piexif.load(img.info['exif'])
             except KeyError:
                 progress_append('.. No exif found')
                 exif = {"0th": {}, "Exif": {}, "GPS": {}, "1st": {}}
+
             try:
                 progress_append(f".. Old date: {exif['Exif'][piexif.ExifIFD.DateTimeOriginal]}")
             except KeyError:
                 progress_append('.. Old date not found')
+
             new_date = i[0:19].replace('-', ':').replace('T', ' ')
             progress_append(f'.. New date: {new_date}')
             exif['Exif'][piexif.ExifIFD.DateTimeOriginal] = new_date
             exif_bytes = piexif.dump(exif)
+
             if not os.path.isdir(os.path.dirname(target_file)):
                 os.makedirs(os.path.dirname(target_file))
+
+            if file_type == 'PNG':
+                target_file = target_file.rsplit('.', 1)[0] + '.jpg'
+
             img.save(target_file, exif=exif_bytes)
             img.close()
             progress_append('.. Saved')
